@@ -1,10 +1,43 @@
+/* eslint-disable react/jsx-boolean-value */
 /**
  * Created by NguyenBa on 7/28/2017.
  */
 import React, { Component } from 'react';
 
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import Checkbox from 'material-ui/Checkbox';
+
+
 export default class Login extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            status: '',
+            userName: '',
+            passWord: '',
+            errors: {},
+        };
+    }
+
+    onLogin = () => {
+        const { userName, passWord } = this.state;
+        const errors = {};
+        if (userName.length === 0) {
+            errors.userName = 'invalid userName';
+        }
+        if (passWord.length === 0) {
+            errors.passWord = 'invalid passWord';
+        }
+        this.setState({ errors });
+        if (Object.keys(errors).length > 0) {
+            return;
+        }
+        console.log('click login');
+    };
+
     render() {
+        const { errors } = this.state;
         return (
             <div className="login-page">
                 <div className="login-box">
@@ -20,25 +53,33 @@ export default class Login extends Component {
                                     <span className="input-group-addon">
                                         <i className="fa fa-user" />
                                     </span>
-                                    <div className="form-line">
-                                        <input type="text" className="form-control" name="username" placeholder="Username" required autofocus/>
-                                    </div>
+                                    <TextField
+                                        hintText="UserName"
+                                        errorText={errors.userName ? 'This field is required' : null}
+                                        onChange={e => this.setState({
+                                            userName: e.target.value,
+                                        })}
+                                    />
                                 </div>
                                 <div className="input-group">
                                     <span className="input-group-addon">
                                         <i className="fa fa-lock" />
                                     </span>
-                                    <div className="form-line">
-                                        <input type="password" className="form-control" name="password" placeholder="Password" required />
-                                    </div>
+                                    <TextField
+                                        hintText="PassWord"
+                                        type="password"
+                                        errorText={errors.passWord ? 'This field is required' : null}
+                                        onChange={e => this.setState({
+                                            passWord: e.target.value,
+                                        })}
+                                    />
                                 </div>
                                 <div className="row">
                                     <div className="col-xs-8 p-t-5">
-                                        <input type="checkbox" name="rememberme" id="rememberme" className="filled-in chk-col-pink" />
-                                            <label for="rememberme">Remember Me</label>
+                                        <Checkbox label="Remember Me" />
                                     </div>
                                     <div className="col-xs-4">
-                                        <button className="btn btn-block bg-pink waves-effect" type="submit">SIGN IN</button>
+                                        <RaisedButton label="SIGN IN" secondary={true} onClick={this.onLogin} />
                                     </div>
                                 </div>
                                 <div className="row m-t-15 m-b--20">
@@ -52,8 +93,10 @@ export default class Login extends Component {
                             </form>
                         </div>
                     </div>
+
                 </div>
             </div>
-        );
+        )
+            ;
     }
-}
+};
